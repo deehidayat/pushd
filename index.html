@@ -1,0 +1,54 @@
+<!DOCTYPE html><html class=''>
+<head>
+
+<link rel='stylesheet prefetch' href='//codepen.io/assets/reset/normalize.css'>
+<style class="cp-pen-styles">body {
+  margin: 40px;
+  background-color: red;
+  color: white;
+}
+body a {
+  color: white;
+}
+body .push-help {
+  display: none;
+}
+body.connected {
+  background-color: green;
+}
+body.connected .start-help {
+  display: none;
+}
+body.connected .push-help {
+  display: block;
+}
+</style></head><body>
+<script src='https://raw.github.com/Yaffle/EventSource/master/eventsource.js'></script>
+<script src='http://code.jquery.com/jquery-1.9.1.min.js'></script>
+<div class='start-help'>
+  Start <a target="_blank" href="https://github.com/rs/pushd">pushd</a> on your local host using the following command:
+  <pre>$ redis-server &</pre>
+  <pre>$ npm start</pre>
+</div>
+<div class='push-help'>
+  You're ready to push event using the following command:
+  <pre>$ curl -d 'msg=Hello world' http://localhost:8800/event/test1</pre>
+</div>
+<ul id='events'></ul>
+<script>(function () {
+    var es;
+    es = new EventSource('/subscribe?events=test1+test2+test3+test4');
+    es.addEventListener('open', function (e) {
+        return $('body').addClass('connected');
+    });
+    es.addEventListener('error', function (e) {
+        return $('body').removeClass('connected');
+    });
+    es.addEventListener('message', function (e) {
+        var data;
+        data = JSON.parse(e.data);
+        return $('#events').append('<li>' + data.event + ': ' + data.message['default']);
+    });
+}.call(this));
+</script>
+</body></html>

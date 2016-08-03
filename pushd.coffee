@@ -11,6 +11,7 @@ Event = require('./lib/event').Event
 PushServices = require('./lib/pushservices').PushServices
 Payload = require('./lib/payload').Payload
 logger = require 'winston'
+path = require 'path'
 
 if settings.server.redis_socket?
     redis = require('redis').createClient(settings.server.redis_socket)
@@ -73,6 +74,10 @@ app.use(bodyParser.urlencoded({ limit: '1mb', extended: true }))
 app.use(bodyParser.json({ limit: '1mb' }))
 app.use(app.router)
 app.disable('x-powered-by');
+
+app.get '/', (req, res) ->
+    # res.send path.resolve(app.get('appPath') + '/index.html');
+    res.sendfile path.join(__dirname + '/index.html');
 
 app.param 'subscriber_id', (req, res, next, id) ->
     try
