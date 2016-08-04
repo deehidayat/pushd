@@ -67,6 +67,13 @@ checkUserAndPassword = (username, password) =>
 
 app = express()
 
+# CORS
+app.use((req, res, next) =>
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+);
+
 app.use(express.logger(':method :url :status')) if settings.server?.access_log
 if settings.server?.auth? and not settings.server?.acl?
     app.use(express.basicAuth checkUserAndPassword)
