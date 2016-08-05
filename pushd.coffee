@@ -74,6 +74,8 @@ app.use((req, res, next) =>
   next();
 );
 
+app.use('/components', express.static(__dirname + '/bower_components'));
+
 app.use(express.logger(':method :url :status')) if settings.server?.access_log
 if settings.server?.auth? and not settings.server?.acl?
     app.use(express.basicAuth checkUserAndPassword)
